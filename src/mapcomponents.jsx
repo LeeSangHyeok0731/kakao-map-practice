@@ -2,26 +2,30 @@ import React, { useEffect } from "react";
 
 const MapComponent = () => {
   useEffect(() => {
-    // 카카오 맵 API 스크립트가 로드되었는지 확인
-    const { kakao } = window;
-    if (kakao && kakao.maps) {
-      const container = document.getElementById("map"); // 지도를 표시할 div
-      const options = {
-        center: new kakao.maps.LatLng(37.5665, 126.9780), // 초기 지도 중심 좌표 (예: 서울 시청)
-        level: 3, // 지도의 확대 레벨
-      };
-      
-      // 지도 생성
-      const map = new kakao.maps.Map(container, options);
+    // 카카오 맵 API 스크립트 로드 확인
+    const script = document.createElement("script");
+    script.src = "//dapi.kakao.com/v2/maps/sdk.js?appkey=f87b60a6e03e13e718d0c26fa7c72556";
+    script.async = true;
+    script.onload = () => {
+      const { kakao } = window;
+      if (kakao && kakao.maps) {
+        const container = document.getElementById("map");
+        const options = {
+          center: new kakao.maps.LatLng(37.5665, 126.9780), // 지도 중심 좌표
+          level: 3, // 지도 확대 레벨
+        };
 
-      // 지도에 마커 추가
-      const markerPosition = new kakao.maps.LatLng(37.5665, 126.9780);
-      const marker = new kakao.maps.Marker({
-        position: markerPosition,
-      });
+        const map = new kakao.maps.Map(container, options); // 지도 생성
 
-      marker.setMap(map); // 마커를 지도에 표시
-    }
+        const markerPosition = new kakao.maps.LatLng(37.5665, 126.9780);
+        const marker = new kakao.maps.Marker({
+          position: markerPosition,
+        });
+
+        marker.setMap(map); // 마커 지도에 추가
+      }
+    };
+    document.head.appendChild(script); // 스크립트를 동적으로 추가
   }, []);
 
   return (
@@ -29,7 +33,7 @@ const MapComponent = () => {
       id="map"
       style={{
         width: "100%",
-        height: "400px", // 지도의 높이 설정
+        height: "400px",
       }}
     ></div>
   );
